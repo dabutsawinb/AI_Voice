@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #0f1117;
+  --bg-card: #1a1d27;
+  --border-color: #2a2d3e;
+  --accent: #1a4fff;
+  --accent-light: #4a7aff;
+  --text-primary: #f0f4ff;
+  --text-secondary: #8891b0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-card); }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* Waveform container */
+.waveform-container wave {
+  overflow: hidden !important;
+}
+
+/* Glowing button */
+.btn-glow {
+  box-shadow: 0 0 15px rgba(26, 79, 255, 0.4);
+  transition: box-shadow 0.3s ease;
+}
+.btn-glow:hover {
+  box-shadow: 0 0 25px rgba(74, 122, 255, 0.7);
+}
+
+/* Recording pulse animation */
+@keyframes recordPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  50% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+}
+.recording-pulse {
+  animation: recordPulse 1.5s ease-in-out infinite;
+}
+
+/* Equalizer bars */
+@keyframes eq1 { 0%, 100% { height: 8px; } 50% { height: 24px; } }
+@keyframes eq2 { 0%, 100% { height: 16px; } 50% { height: 8px; } }
+@keyframes eq3 { 0%, 100% { height: 12px; } 50% { height: 28px; } }
+@keyframes eq4 { 0%, 100% { height: 20px; } 50% { height: 10px; } }
+@keyframes eq5 { 0%, 100% { height: 6px; } 50% { height: 22px; } }
+
+.eq-bar-1 { animation: eq1 0.8s ease-in-out infinite; }
+.eq-bar-2 { animation: eq2 0.6s ease-in-out infinite; }
+.eq-bar-3 { animation: eq3 1.0s ease-in-out infinite; }
+.eq-bar-4 { animation: eq4 0.7s ease-in-out infinite; }
+.eq-bar-5 { animation: eq5 0.9s ease-in-out infinite; }
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #4a7aff 0%, #a78bfa 50%, #34d399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass morphism card */
+.glass-card {
+  background: rgba(26, 29, 39, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(42, 45, 62, 0.8);
+}

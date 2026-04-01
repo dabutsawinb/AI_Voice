@@ -1,0 +1,53 @@
+version: "3.9"
+
+# ─────────────────────────────────────────────────────────
+# AI Voice Studio — Docker Compose
+# GPU version (requires nvidia-container-toolkit)
+# ─────────────────────────────────────────────────────────
+
+services:
+  # ── Next.js Frontend ──
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: voice_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # ── FastAPI Backend ──
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: voice_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persist AI engine clones + model files
+      - ./ai-engines:/app/ai-engines
+      - ./backend/models_store:/app/models_store
+      - voice_outputs:/app/outputs
+    environment:
+      - GPT_SOVITS_PATH=/app/ai-engines/GPT-SoVITS
+      - RVC_PATH=/app/ai-engines/RVC
+      - RVC_MODELS_DIR=/app/models_store/rvc
+      - TTS_MODELS_DIR=/app/models_store/tts
+      - CORS_ORIGINS=http://localhost:3000
+    # GPU pass-through (NVIDIA)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+volumes:
+  voice_outputs:
