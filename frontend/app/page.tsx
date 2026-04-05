@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Cpu, Mic, Volume2, Zap } from "lucide-react";
+import { Cpu, Mic, Volume2, Zap, FileText } from "lucide-react";
 import TTSPanel from "@/components/TTSPanel";
 import VCPanel from "@/components/VCPanel";
+import NotesPanel from "@/components/NotesPanel";
 import StatusBar from "@/components/StatusBar";
 
-type Mode = "tts" | "vc";
+type Mode = "tts" | "vc" | "notes";
 
 export default function Home() {
   const [activeMode, setActiveMode] = useState<Mode>("tts");
@@ -42,7 +43,7 @@ export default function Home() {
           <div className="inline-flex items-center gap-2 bg-[#1a4fff]/10 border border-[#1a4fff]/30 rounded-full px-4 py-1.5 mb-4">
             <Cpu className="w-3.5 h-3.5 text-[#4a7aff]" />
             <span className="text-xs text-[#4a7aff] font-medium">
-              Powered by GPT-SoVITS + RVC v2
+              Powered by RVC v2 + Edge TTS + AssemblyAI
             </span>
           </div>
           <h2 className="text-4xl font-extrabold gradient-text mb-3">
@@ -95,17 +96,38 @@ export default function Home() {
               VC
             </span>
           </button>
+
+          <button
+            onClick={() => setActiveMode("notes")}
+            className={`flex items-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 ${
+              activeMode === "notes"
+                ? "bg-gradient-to-r from-[#0e7490] to-[#22d3ee] text-white shadow-lg shadow-[#0e7490]/30"
+                : "bg-[#1a1d27] text-[#8891b0] border border-[#2a2d3e] hover:bg-[#222537] hover:text-white"
+            }`}
+          >
+            <FileText className="w-4 h-4" />
+            Smart Note
+            <span className={`text-xs px-2 py-0.5 rounded-full font-normal ${
+              activeMode === "notes"
+                ? "bg-white/20 text-white"
+                : "bg-[#2a2d3e] text-[#8891b0]"
+            }`}>
+              NEW
+            </span>
+          </button>
         </div>
 
         {/* ===== PANELS ===== */}
         <div className="pb-12">
-          {activeMode === "tts" ? <TTSPanel /> : <VCPanel />}
+          {activeMode === "tts" && <TTSPanel />}
+          {activeMode === "vc"  && <VCPanel />}
+          {activeMode === "notes" && <NotesPanel />}
         </div>
       </div>
 
       {/* ===== FOOTER ===== */}
       <footer className="mt-auto border-t border-[#2a2d3e] py-4 px-6 text-center text-xs text-[#8891b0]">
-        AI Voice Studio — GPT-SoVITS · RVC v2 · Edge TTS Fallback · Local GPU
+        AI Voice Studio — RVC v2 · Edge TTS · AssemblyAI · Gemini 1.5 Flash
       </footer>
     </div>
   );

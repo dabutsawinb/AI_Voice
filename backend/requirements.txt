@@ -26,6 +26,10 @@ torchaudio>=2.1.0
 redis==5.0.4
 rq==1.16.2
 
+# ── Smart Note (AssemblyAI + Gemini) ──
+assemblyai==0.26.0
+google-generativeai==0.7.2
+
 # ── Utilities ──
 pydantic==2.7.1
 pydantic-settings==2.2.1

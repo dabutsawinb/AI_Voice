@@ -85,6 +85,35 @@ class ModelsResponse(BaseModel):
     models: list[ModelInfo]
 
 
+# ─────────────────────────────────────────────────────────────
+# Smart Note schemas
+# ─────────────────────────────────────────────────────────────
+
+class Utterance(BaseModel):
+    speaker:  str
+    text:     str
+    start_ms: int   # เริ่มที่กี่ millisecond
+    end_ms:   int
+
+class NoteResult(BaseModel):
+    job_id:       str
+    status:       JobStatus
+    progress:     int = 0
+    # transcript
+    full_text:    Optional[str]         = None
+    utterances:   Optional[list[Utterance]] = None
+    duration_sec: Optional[float]       = None
+    language:     Optional[str]         = None
+    # summary
+    summary:      Optional[str]         = None
+    key_points:   Optional[list[str]]   = None
+    action_items: Optional[list[str]]   = None
+    topics:       Optional[list[str]]   = None
+    # meta
+    error:        Optional[str]         = None
+    engine_used:  Optional[str]         = None
+
+
 class HealthResponse(BaseModel):
     status:  str
     engines: dict[str, bool]

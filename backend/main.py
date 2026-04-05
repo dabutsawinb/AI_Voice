@@ -7,6 +7,10 @@ from __future__ import annotations
 import asyncio
 import os
 from contextlib import asynccontextmanager
+from pathlib import Path
+
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).parent / ".env")  # โหลด .env ก่อนทุกอย่าง
 
 import torch
 from fastapi import FastAPI
@@ -14,7 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
 from models.schemas import HealthResponse
-from routers import tts, vc, jobs, models as models_router
+from routers import tts, vc, jobs, models as models_router, notes
 from utils.jobs import JobManager
 
 
@@ -30,9 +34,11 @@ async def lifespan(app: FastAPI):
     # Pre-load services lazily (they self-initialize on first use)
     from services.rvc_service import RVCService
     from services.edge_tts_service import EdgeTTSService
+    from services.gemini_service import GeminiService
 
     RVCService()
     EdgeTTSService()
+    GeminiService()
 
     logger.info("All services initialized.")
 
@@ -78,6 +84,7 @@ app.include_router(tts.router)
 app.include_router(vc.router)
 app.include_router(jobs.router)
 app.include_router(models_router.router)
+app.include_router(notes.router)
 
 
 # ─────────────────────────────────────────────────────────────
@@ -93,9 +100,14 @@ async def health_check():
     if torch.cuda.is_available():
         gpu_name = torch.cuda.get_device_name(0)
 
+    from services.gemini_service import GeminiService
+    from services.assemblyai_service import AssemblyAIService
+
     engines = {
-        "rvc_v2":   RVCService().is_ready(),
-        "edge_tts": EdgeTTSService().is_ready(),
+        "rvc_v2":     RVCService().is_ready(),
+        "edge_tts":   EdgeTTSService().is_ready(),
+        "assemblyai": AssemblyAIService().is_ready(),
+        "gemini":     GeminiService().is_ready(),
     }
 
     return HealthResponse(
